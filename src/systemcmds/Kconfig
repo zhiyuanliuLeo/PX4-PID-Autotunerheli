@@ -1,1 +1,4 @@
 rsource "*/Kconfig"
+menuconfig SYSTEMCMDS_VL53ADDR
+	bool "vl53addr"
+	default n

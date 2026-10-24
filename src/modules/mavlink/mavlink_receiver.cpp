@@ -3232,6 +3232,7 @@ MavlinkReceiver::run()
 				_mavlink_ftp.send();
 			}
 
+			// 不发送日志相关内容
 			_mavlink_log_handler.send();
 			last_send_update = t;
 		}
@@ -3460,3 +3461,4 @@ void MavlinkReceiver::stop()
 	_should_exit.store(true);
 	pthread_join(_thread, nullptr);
 }
+

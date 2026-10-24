@@ -206,6 +206,8 @@ else
 	fi
 	unset BOARD_RC_DEFAULTS
 
+	# param set SYS_AUTOSTART 16001
+
 	#
 	# Set parameters and env variables for selected SYS_AUTOSTART.
 	#

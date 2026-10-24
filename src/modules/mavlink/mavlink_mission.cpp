@@ -489,6 +489,8 @@ MavlinkMissionManager::send_mission_item_reached(uint16_t seq)
 void
 MavlinkMissionManager::send()
 {
+	// 不发送任何指令
+	// return;
 	// do not send anything over high latency communication
 	if (_mavlink->get_mode() == Mavlink::MAVLINK_MODE_IRIDIUM) {
 		return;
@@ -1838,6 +1840,8 @@ void MavlinkMissionManager::copy_params_from_mavlink_to_mission_item(struct miss
 
 void MavlinkMissionManager::check_active_mission()
 {
+	return;
+
 	// do not send anything over high latency communication
 	if (_mavlink->get_mode() == Mavlink::MAVLINK_MODE_IRIDIUM) {
 		return;
@@ -1886,3 +1890,4 @@ uint32_t MavlinkMissionManager::crc32_for_mission_item(const mavlink_mission_ite
 
 	return crc32part(u.raw, sizeof(u), prev_crc32);
 }
+

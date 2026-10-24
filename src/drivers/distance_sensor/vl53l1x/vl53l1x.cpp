@@ -36,6 +36,8 @@
 
 #include "vl53l1x.hpp"
 #include <px4_platform_common/module.h>
+#include <px4_platform/gpio.h>
+#include <board_config.h>
 
 #define VL53L1X_DELAY                          50000   // delay to reduce CPU usage (us)
 #define VL53L1X_SAMPLE_RATE                    200  // ms, default
@@ -260,6 +262,27 @@ int VL53L1X::probe()
 	return PX4_OK;
 }
 
+int VL53L1X::assign_address(uint8_t new_address)
+{
+	_address_assigning = true;
+
+	int ret = device::I2C::init();
+
+	_address_assigning = false;
+
+	if (ret != PX4_OK) {
+		return PX4_ERROR;
+	}
+
+	ret = VL53L1X_SetI2CAddress(new_address);
+
+	if (ret != PX4_OK) {
+		return PX4_ERROR;
+	}
+
+	return PX4_OK;
+}
+
 void VL53L1X::RunImpl()
 {
 
@@ -306,6 +329,9 @@ int VL53L1X::init()
 		perf_count(_comms_errors);
 		return PX4_ERROR;
 	}
+
+
+
 
 	PX4_DEBUG("vl53l1x init success");
 	ScheduleNow();
@@ -447,6 +473,11 @@ int8_t VL53L1X::VL53L1_WrDWord(uint16_t index, uint32_t data)
 	}
 
 	return PX4_OK;
+}
+
+int8_t VL53L1X::VL53L1X_SetI2CAddress(uint8_t new_address)
+{
+	return VL53L1_WrByte(VL53L1_I2C_SLAVE__DEVICE_ADDRESS, new_address & 0x7f);
 }
 
 // __more

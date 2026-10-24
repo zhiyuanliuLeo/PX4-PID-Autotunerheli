@@ -119,6 +119,8 @@ public:
 	 */
 	void RunImpl();
 
+	int assign_address(uint8_t new_address);
+
 	// Distance mode member variable
 	uint16_t _distance_mode{VL53L1X_LONG_RANGE};
 
@@ -156,8 +158,11 @@ private:
 	int8_t VL53L1X_SetInterMeasurementInMs(uint32_t InterMeasurementInMs);
 	int8_t VL53L1X_SetROICenter(uint8_t data);
 	int8_t VL53L1X_SetROI(uint16_t x, uint16_t y);
+	int8_t VL53L1X_SetI2CAddress(uint8_t new_address);
 	PX4Rangefinder    _px4_rangefinder;
 
 	perf_counter_t _comms_errors{perf_alloc(PC_COUNT, MODULE_NAME": com_err")};
 	perf_counter_t _sample_perf{perf_alloc(PC_ELAPSED, MODULE_NAME": read")};
+
+	bool _address_assigning{false};
 };

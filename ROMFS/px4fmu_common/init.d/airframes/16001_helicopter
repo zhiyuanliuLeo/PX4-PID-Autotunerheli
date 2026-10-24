@@ -1,28 +1,108 @@
 #!/bin/sh
 #
-# @name Generic Helicopter (Tail ESC)
-#
+# @name 双电机直升机
 # @type Helicopter
 # @class Copter
 #
 # @board px4_fmu-v2 exclude
 # @board bitcraze_crazyflie exclude
 #
+# @output MAIN1 主旋翼
+# @output MAIN2 斜盘滚转舵机
+# @output MAIN3 斜盘俯仰舵机
+# @output MAIN4 尾旋翼
+#
 
 . ${R}etc/init.d/rc.heli_defaults
 
-
-# Disable PID gains for initial setup. These should be enabled after setting the FF gain.
-# P is expected to be lower than FF.
-param set-default MC_ROLLRATE_P 0
-param set-default MC_ROLLRATE_I 0
-param set-default MC_ROLLRATE_D 0
-param set-default MC_ROLLRATE_FF 0.1
-param set-default MC_PITCHRATE_P 0
-param set-default MC_PITCHRATE_I 0
-param set-default MC_PITCHRATE_D 0
-param set-default MC_PITCHRATE_FF 0.1
-
 param set-default CA_AIRFRAME 10
 
+
+# 自动上锁设置
+param set-default COM_DISARM_LAND  8
+
+# MPC控制参数（待定）
+# param set-default MPC_LAND_SPEED 1
+# param set-default MPC_TKO_SPEED 4
+# param set-default MPC_MAN_TILT_MAX 20
+# param set-default MPC_TILTMAX_AIR 20
+# param set-default MPC_XY_CRUISE 9
+# param set-default MPC_XY_VEL_ALL 15
+# param set-default MPC_XY_VEL_P_ACC 1
+# param set-default MPC_XY_P 1
+# param set-default MPC_Z_VEL_MAX_UP 7
+# param set-default MPC_Z_VEL_MAX_DN 7
+# param set-default MPC_Z_VEL_P_ACC 5
+# param set-default MPC_Z_VEL_I_ACC 1
+# param set-default MPC_Z_VEL_D_ACC 0.15
+# param set-default MPC_Z_P 2
+# param set-default MPC_Z_V_AUTO_UP 5
+# param set-default MPC_Z_V_AUTO_DN 4
+# param set-default MPC_LAND_ALT1 20
+# param set-default MPC_LAND_ALT2 10
+# param set-default MPC_VEL_MANUAL 10
+
+# 构型布局参数
+# 电机数量2
+param set-default CA_ROTOR_COUNT 2
+# 斜盘舵机数量2
+param set-default CA_SP0_COUNT 3
+# 第一个斜盘舵机的方位角度
+param set-default CA_SP0_ANG0 90
+# 第二个斜盘舵机的方位角度
+param set-default CA_SP0_ANG1 180
+
+# 用于尾旋翼前馈控制的参考悬停油门指令
+param set-default CA_HELI_YAW_CP_O 0.5
+
+param set-default PWM_MAIN_TIM0 50
+
+# 设置通道映射
+# 设置动力电机的通道，电机开头是1
+param set-default PWM_MAIN_FUNC6 101
+param set-default PWM_MAIN_FUNC2 201
+# 设置倾斜盘舵机的通道，舵机开头是2
+param set-default PWM_MAIN_FUNC3 202
+param set-default PWM_MAIN_FUNC4 102
+param set-default PWM_MAIN_FUNC5 203
+# 在这里要增加IMU滤波的参数。
+
+# 设置不检查SD卡
+param set-default COM_ARM_SDCARD 0
+
+# 基础噪声参数（单位：m/s²）
+
+# 提升加速度计噪声系数（默认0.35）
+param set-default EKF2_ACC_NOISE 0.85
+
+# 陀螺噪声系数提升
+param set-default EKF2_GYR_NOISE 0.020
+
+# 动态调谐参数
+
+# 加速度计偏差学习率（默认0.003）
+param set-default EKF2_ACC_B_NOISE 0.02
+
+# 陀螺偏差学习率
+param set-default EKF2_GYR_B_NOISE 0.003
+
+# 振动补偿参数
+
+# 陀螺低通滤波截止频率（默认40Hz）
+param set-default IMU_GYRO_CUTOFF 30
+
+# 角角速度微分滤波器截止频率，建议设置为陀螺仪截止频率的1/2（如15Hz）
+param set-default IMU_DGYRO_CUTOFF 15
+
+# 设置传感器位置为飞机重心前方0.02米
+param set-default EKF2_IMU_POS_X 0.02
+
+
+# 使用FFT自动计算动态滤波
+param set-default IMU_GYRO_DNF_EN 2
+
+# 根据实际波动调整气压计噪声参数，增大该值可降低对气压计的依赖。
+param set-default EKF2_BARO_NOISE 5
+
+# param set-default EKF2_BARO_GATE 2
 

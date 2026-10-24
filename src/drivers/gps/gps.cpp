@@ -472,10 +472,19 @@ int GPS::pollOrRead(uint8_t *buf, size_t buf_length, int timeout)
 	int timeout_adjusted = math::min(max_timeout, timeout);
 
 	handleInjectDataTopic();
+	// if (_interface == GPSHelper::Interface::UART) {
+	// 	ret = _uart.readAtLeast(buf, buf_length, math::min(character_count, buf_length), timeout_adjusted);
+	//         if (ret > 0) {
+	// 		_num_bytes_read += ret;
+	// 	}
+	// }
 
-	if (_interface == GPSHelper::Interface::UART) {
-		ret = _uart.readAtLeast(buf, buf_length, math::min(character_count, buf_length), timeout_adjusted);
-
+	if(_interface == GPSHelper::Interface::UART) {
+                ret = _uart.readAtLeast(buf, buf_length, math::min(character_count, buf_length), timeout_adjusted);
+                if (ret > 0) {
+			_num_bytes_read += ret;  // 记录实际读取的字节数
+		}
+	}
 // SPI is only supported on LInux
 #if defined(__PX4_LINUX)
 
